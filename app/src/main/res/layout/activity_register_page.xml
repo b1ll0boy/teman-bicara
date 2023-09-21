@@ -243,12 +243,13 @@
                 android:id="@+id/checkBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Saya setuju dengan syarat dan ketentuan"
                 android:fontFamily="@font/raleway_semibold"
-                android:textSize="11sp"
-                android:textColor="@color/black"/>
+                android:text="Saya setuju dengan syarat dan ketentuan"
+                android:textColor="@color/black"
+                android:textSize="11sp" />
 
             <Button
+                android:id="@+id/register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
