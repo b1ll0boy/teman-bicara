@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1073757540521",
+    "project_id": "teman-bicara-f1ab0",
+    "storage_bucket": "teman-bicara-f1ab0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073757540521:android:c096a19c4114e8304899b8",
+        "android_client_info": {
+          "package_name": "com.example.temanbicara"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbMt6u6hIfVI4Vlgz4C7N4maWq9MK6iqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

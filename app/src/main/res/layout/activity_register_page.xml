@@ -104,6 +104,7 @@
                 android:textSize="16sp" />
 
             <EditText
+                android:id="@+id/confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_edittext"
@@ -249,7 +250,7 @@
                 android:textSize="11sp" />
 
             <Button
-                android:id="@+id/register"
+                android:id="@+id/registerButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
