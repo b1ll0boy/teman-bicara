@@ -4,21 +4,34 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.example.temanbicara.R
-import com.example.temanbicara.databinding.ActivityRegisterPageBinding
-import com.google.firebase.auth.FirebaseAuth
+import com.example.temanbicara.data.AppDb
+//import com.example.temanbicara.data.AuthViewModel
+import com.example.temanbicara.data.User
+import com.example.temanbicara.data.UserDatabase
+//import com.example.temanbicara.data.UserRepository
+//import com.example.temanbicara.databinding.ActivityRegisterPageBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 class RegisterPage : AppCompatActivity() {
-    private lateinit var binding: ActivityRegisterPageBinding
-    private lateinit var firebaseAuth: FirebaseAuth
+//    private lateinit var binding: ActivityRegisterPageBinding
+//    private lateinit var authViewModel: AuthViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRegisterPageBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+//        binding = ActivityRegisterPageBinding.inflate(layoutInflater)
+        setContentView(R.layout.activity_register_page)
 
-        firebaseAuth = FirebaseAuth.getInstance()
+//        val userDao = UserDatabase.getDatabase(application).userDao()
+//        val userRepository = UserRepository(userDao)
+//        authViewModel = ViewModelProvider(this, AuthViewModel.Factory(userRepository))
+//            .get(AuthViewModel::class.java)
 
 //        val textClick = findViewById<Button>(R.id.registerButton)
 //        textClick.setOnClickListener {
@@ -27,28 +40,39 @@ class RegisterPage : AppCompatActivity() {
 //            overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out)
 //        }
 
-        binding.registerButton.setOnClickListener{
-            val name = binding.inputNama.text.toString()
-            val email = binding.inputEmail.text.toString()
-            val password = binding.inputPassword.text.toString()
-            val confirmPassword = binding.confirmPassword.text.toString()
-            val phone = binding.inputTelepon.text.toString()
+        val registerButton = findViewById<Button>(R.id.registerButton)
+        val inputNama = findViewById<EditText>(R.id.input_nama)
+        val inputEmail = findViewById<EditText>(R.id.input_email)
+        val inputPassword = findViewById<EditText>(R.id.input_password)
+        val confirmPassword = findViewById<EditText>(R.id.confirm_password)
+        val inputTelepon = findViewById<EditText>(R.id.input_telepon)
+
+        registerButton.setOnClickListener{
+            val name = inputNama.text.toString()
+            val email = inputEmail.text.toString()
+            val password = inputPassword.text.toString()
+            val confirmPassword = confirmPassword.text.toString()
+            val phone = inputTelepon.text.toString()
 
             if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
                 if (password == confirmPassword) {
-                    firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener() {
-                        if (it.isSuccessful) {
-                            val intent = Intent(this@RegisterPage, LoginPage::class.java)
-                            startActivity(intent)
-                        } else {
-                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-                        }
+                    val userDao = AppDb.database.userDao()
+                    val user = User(name = name, email = email, password = password)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        userDao.insert(user)
                     }
+
+                    Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+
+//                    authViewModel.registerUser(user)
+                    val intent = Intent(this@RegisterPage, LoginPage::class.java)
+                    startActivity(intent)
                 } else {
                     Toast.makeText(this, "Password is not matching", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "Empty fields Are not Allowed!!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Empty fields are not allowed!", Toast.LENGTH_SHORT).show()
             }
 
         }
