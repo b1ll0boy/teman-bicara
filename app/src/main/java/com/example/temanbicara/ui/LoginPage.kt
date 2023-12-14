@@ -18,11 +18,8 @@ import com.example.temanbicara.data.UserDatabase
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginPage : AppCompatActivity() {
-//    private lateinit var binding: ActivityLoginPageBinding
-//    private lateinit var authViewModel: AuthViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        binding = ActivityLoginPageBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_login_page)
 
         val buatAkun = findViewById<TextView>(R.id.buat_akun)
@@ -32,22 +29,7 @@ class LoginPage : AppCompatActivity() {
 //            overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out)
         }
 
-//        val buttonClick = findViewById<Button>(R.id.login)
-//        buttonClick.setOnClickListener {
-//            val intent = Intent(this, HomePage::class.java)
-//            startActivity(intent)
-//            overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out)
-//        }
 
-//        val userDao = UserDatabase.getDatabase(application).userDao()
-//        val userRepository = UserRepository(userDao)
-//        authViewModel = ViewModelProvider(this, AuthViewModel.Factory(userRepository))
-//            .get(AuthViewModel::class.java)
-
-//        buatAkun.setOnClickListener{
-//            val intent = Intent(this, RegisterPage::class.java)
-//            startActivity(intent)
-//        }
         val login = findViewById<Button>(R.id.login)
         val inputEmail = findViewById<EditText>(R.id.input_email)
         val inputPassword = findViewById<EditText>(R.id.input_password)
@@ -59,7 +41,6 @@ class LoginPage : AppCompatActivity() {
             val password = inputPassword.text.toString()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-//                val user = userDao.getUserByEmail(email)
                 userDao.getUserByEmail(email).observe(this, {user ->
                     if (user != null && user.password == password) {
                         val intent = Intent(this@LoginPage, HomePage::class.java)

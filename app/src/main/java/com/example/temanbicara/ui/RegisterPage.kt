@@ -21,24 +21,10 @@ import kotlinx.coroutines.launch
 
 
 class RegisterPage : AppCompatActivity() {
-//    private lateinit var binding: ActivityRegisterPageBinding
-//    private lateinit var authViewModel: AuthViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        binding = ActivityRegisterPageBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_register_page)
 
-//        val userDao = UserDatabase.getDatabase(application).userDao()
-//        val userRepository = UserRepository(userDao)
-//        authViewModel = ViewModelProvider(this, AuthViewModel.Factory(userRepository))
-//            .get(AuthViewModel::class.java)
-
-//        val textClick = findViewById<Button>(R.id.registerButton)
-//        textClick.setOnClickListener {
-//            val intent = Intent(this, LoginPage::class.java)
-//            startActivity(intent)
-//            overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out)
-//        }
 
         val registerButton = findViewById<Button>(R.id.registerButton)
         val inputNama = findViewById<EditText>(R.id.input_nama)

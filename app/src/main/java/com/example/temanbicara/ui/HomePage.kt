@@ -5,17 +5,18 @@ import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.RequestQueue
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
-import com.example.temanbicara.Api.TweetAdapter
+import com.example.temanbicara.Api.Article
+import com.example.temanbicara.Api.NewsAdapter
+import com.example.temanbicara.Api.NewsResponse
+import com.example.temanbicara.Api.RetrofitClient
 import com.example.temanbicara.R
-import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
 
 class HomePage : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var tweetAdapter: TweetAdapter
+    private lateinit var newsAdapter: NewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,53 +24,43 @@ class HomePage : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        tweetAdapter = TweetAdapter(listOf()) // Initial empty list of tweets
-        recyclerView.adapter = tweetAdapter
+        newsAdapter = NewsAdapter(listOf()) // Initial empty list of news articles
+        recyclerView.adapter = newsAdapter
 
-        fetchTweets()
+        fetchNews()
     }
 
-    private fun fetchTweets() {
-        val keyword = "mental health"
-        val url = "https://api.twitter.com/2/tweets/search/recent?query=${keyword}"
+    private fun fetchNews() {
+        val q = "mental-health"
+//        val country = "id" // Change this to the desired country code
+        val service = RetrofitClient.instance
+        val call = service.getTopHeadlines(q, "9596d8f38aeb495fa112f48a3a3766c2")
 
-        val request = object : JsonObjectRequest(Method.GET, url, null,
-            Response.Listener { response ->
-                val tweets = parseTweets(response)
-                updateUI(tweets)
-            },
-            Response.ErrorListener { error ->
-                Log.e("TwitterRequest", "Error: $error")
-            }) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "AAAAAAAAAAAAAAAAAAAAAP8PqwEAAAAAElNRn1kyJ47oWIzIqeC%2FHcq2N%2Bs%3DCJG0P7M7CqS2obuVFju0PKWUmNcI1gAoPU7XRUBVHejymSfBl3"
-                return headers
+        call.enqueue(object : Callback<NewsResponse?> {
+            override fun onResponse(
+                call: Call<NewsResponse?>,
+                response: retrofit2.Response<NewsResponse?>
+            ) {
+                if (response.isSuccessful) {
+                    val articles = response.body()?.articles ?: emptyList()
+                    updateUI(articles)
+                } else {
+                    // Handle unsuccessful response
+                    Log.e("NewsAPI", "Error: ${response.code()}")
+                }
             }
-        }
 
-        val queue: RequestQueue = Volley.newRequestQueue(this)
-        queue.add(request)
+            override fun onFailure(call: Call<NewsResponse?>, t: Throwable) {
+                // Handle network failure
+                Log.e("NewsAPI", "Network Error: ${t.message}")
+            }
+        })
     }
 
-    private fun parseTweets(response: JSONObject): List<String> {
-        val tweets: MutableList<String> = mutableListOf()
-        val dataArray = response.getJSONArray("data")
-
-        for (i in 0 until dataArray.length()) {
-            val tweet = dataArray.getJSONObject(i)
-            val text = tweet.getString("text")
-            tweets.add(text)
-        }
-
-        return tweets
-    }
-
-
-    private fun updateUI(tweets: List<String>) {
-        tweetAdapter = TweetAdapter(tweets)
-        recyclerView.adapter = tweetAdapter
-        tweetAdapter.notifyDataSetChanged()
+    private fun updateUI(articles: List<Article>) {
+        newsAdapter = NewsAdapter(articles)
+        recyclerView.adapter = newsAdapter
+        newsAdapter.notifyDataSetChanged()
     }
 }
 
